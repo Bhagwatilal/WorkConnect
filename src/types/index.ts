@@ -41,3 +41,11 @@ export interface Job {
   status: 'open' | 'closed';
   createdAt: string;
 }
+
+export interface JobApplication {
+  id: string;
+  jobId: string;
+  workerId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  appliedAt: string;
+}

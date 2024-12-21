@@ -12,7 +12,7 @@ const SAMPLE_JOBS: Job[] = [
     description: 'We are looking for a store assistant to help with daily operations.',
     businessName: 'Super Mart',
     ownerId: 'owner1',
-    location: 'Pune',
+    location: 'Mumbai',
     workType: 'full-time',
     salary: {
       amount: 15000,
@@ -28,10 +28,10 @@ const SAMPLE_JOBS: Job[] = [
     description: 'Experienced server needed for busy restaurant.',
     businessName: 'Tasty Bites',
     ownerId: 'owner2',
-    location: 'Mumbai',
+    location: 'Delhi',
     workType: 'part-time',
     salary: {
-      amount: 800,
+      amount: 300,
       period: 'day',
     },
     requirements: ['Previous experience', 'Good communication'],
@@ -73,7 +73,7 @@ const JobsPage: React.FC = () => {
             title="Location"
             options={[
               { label: 'Mumbai', value: 'mumbai' },
-              { label: 'Pune', value: 'Pune' },
+              { label: 'Delhi', value: 'delhi' },
               { label: 'Bangalore', value: 'bangalore' },
             ]}
             selectedValues={selectedLocations}

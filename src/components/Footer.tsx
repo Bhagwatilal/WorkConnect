@@ -56,8 +56,8 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-bold mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-400">
               <li>Email: support@workconnect.com</li>
-              <li>Phone: +91 88064 89949</li>
-              <li>Address: Karve Nagar, Pune, India</li>
+              <li>Phone: +1 (555) 123-4567</li>
+              <li>Address: 123 Work Street, City, Country</li>
             </ul>
           </div>
         </div>

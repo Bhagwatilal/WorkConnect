@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import GoogleButton from '../../components/auth/GoogleButton';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState<'worker' | 'owner'>('worker');
   const navigate = useNavigate();
+  const location = useLocation();
   const login = useAuthStore((state) => state.login);
+
+  const from = location.state?.from || '/dashboard';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login - replace with actual API call
     login({
       id: '1',
-      name: 'John Doe',
+      name: email.split('@')[0], // Use email username as initial name
       email,
-      role: 'worker',
+      role: userType,
     });
-    navigate('/dashboard');
+    navigate(from);
   };
 
   return (
@@ -53,7 +56,22 @@ const Login: React.FC = () => {
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
+            <div>
+              <label htmlFor="user-type" className="block text-sm font-medium text-gray-700">
+                I am a
+              </label>
+              <select
+                id="user-type"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value as 'worker' | 'owner')}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              >
+                <option value="worker">Worker</option>
+                <option value="owner">Business Owner</option>
+              </select>
+            </div>
+
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -64,7 +82,7 @@ const Login: React.FC = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -80,7 +98,7 @@ const Login: React.FC = () => {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
