@@ -1,10 +1,21 @@
 import { Job } from '../types';
 import { WorkerProfile } from '../store/workerStore';
 
-export const getRecommendedJobs = (jobs: Job[], workerProfile: WorkerProfile | null): Job[] => {
+export const getRecommendedJobs = (
+  jobs: Job[], 
+  workerProfile: WorkerProfile | null,
+  selectedArea?: string,
+  selectedSubArea?: string
+): Job[] => {
   if (!workerProfile) return [];
 
   return jobs.filter(job => {
+    // Location match (highest priority)
+    const locationMatch = selectedArea ? 
+      job.location.toLowerCase().includes(selectedArea.toLowerCase()) : true;
+
+    if (!locationMatch) return false;
+
     // Match based on skills (weighted)
     const skillMatches = job.requirements.filter(req =>
       workerProfile.skills.some(skill =>
@@ -19,14 +30,11 @@ export const getRecommendedJobs = (jobs: Job[], workerProfile: WorkerProfile | n
       workerProfile.preferredWorkType === 'both' ||
       job.workType === workerProfile.preferredWorkType;
 
-    // Match based on location (if available)
-    const locationMatch = job.location.toLowerCase() === workerProfile.address.toLowerCase();
-
     // Calculate overall match score
     const matchScore = (
-      (skillMatchScore * 0.5) + // Skills are 50% of the score
-      (workTypeMatch ? 0.3 : 0) + // Work type is 30% of the score
-      (locationMatch ? 0.2 : 0) // Location is 20% of the score
+      (skillMatchScore * 0.4) + // Skills are 40% of the score
+      (workTypeMatch ? 0.2 : 0) + // Work type is 20% of the score
+      (locationMatch ? 0.4 : 0) // Location is 40% of the score
     );
 
     // Return true if the match score is above 0.4 (40% match)

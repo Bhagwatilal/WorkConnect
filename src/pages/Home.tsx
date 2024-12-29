@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Briefcase, Users } from 'lucide-react';
+import { useJobStore } from '../store/jobStore';
+import JobSlider from '../components/jobs/JobSlider';
 
 const Home: React.FC = () => {
+  const jobs = useJobStore(state => state.jobs);
+
   return (
     <div className="space-y-16">
       {/* Hero Section */}
@@ -73,28 +77,10 @@ const Home: React.FC = () => {
             View All Jobs →
           </Link>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Sample Job Cards */}
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="border rounded-lg p-6 hover:shadow-lg transition">
-              <h3 className="text-xl font-semibold mb-2">Store Assistant</h3>
-              <p className="text-gray-600 mb-4">Kirana Store - Mumbai</p>
-              <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-                <span>Full Time</span>
-                <span>₹15,000/month</span>
-              </div>
-              <Link
-                to={`/jobs/${i}`}
-                className="block text-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-              >
-                Apply Now
-              </Link>
-            </div>
-          ))}
-        </div>
+        <JobSlider jobs={jobs.slice(0, 15)} itemsPerPage={3} />
       </section>
     </div>
   );
-};
+}
 
 export default Home;

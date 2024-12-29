@@ -1,22 +1,35 @@
 import React from 'react';
 import { User } from '../../types';
+import ProfileImageUpload from './ProfileImageUpload';
+import EditableName from './EditableName';
+import { useAuthStore } from '../../store/authStore';
 
 interface ProfileHeaderProps {
   user: User | null;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
+  const updateUser = useAuthStore(state => state.updateUser);
+
   if (!user) return null;
+
+  const handleImageChange = (newImage: string) => {
+    updateUser({ ...user, avatar: newImage });
+  };
+
+  const handleNameChange = (newName: string) => {
+    updateUser({ ...user, name: newName });
+  };
 
   return (
     <div className="flex items-center space-x-4">
-      <img
-        src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
-        alt={user.name}
-        className="w-20 h-20 rounded-full"
+      <ProfileImageUpload
+        currentImage={user.avatar}
+        name={user.name}
+        onImageChange={handleImageChange}
       />
       <div>
-        <h2 className="text-xl font-semibold">{user.name}</h2>
+        <EditableName name={user.name} onSave={handleNameChange} />
         <p className="text-gray-600">{user.email}</p>
       </div>
     </div>

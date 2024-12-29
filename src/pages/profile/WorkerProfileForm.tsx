@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useWorkerStore } from '../../store/workerStore';
+import { useLocationStore } from '../../store/locationStore';
 import ProfileHeader from '../../components/profile/ProfileHeader';
 import SkillsSection from '../../components/profile/SkillsSection';
 import WorkPreferences from '../../components/profile/WorkPreferences';
 import ContactInfo from '../../components/profile/ContactInfo';
+import LocationSelector from '../../components/location/LocationSelector';
 
 interface WorkerProfileFormProps {
   isEditing: boolean;
@@ -14,22 +16,20 @@ interface WorkerProfileFormProps {
 const WorkerProfileForm: React.FC<WorkerProfileFormProps> = ({ isEditing, setIsEditing }) => {
   const { user } = useAuthStore();
   const { profile, updateWorkerProfile } = useWorkerStore();
-  const [formData, setFormData] = useState(profile || {
-    skills: ['Retail', 'Customer Service'],
-    experience: '2 years',
-    preferredWorkType: 'full-time',
-    availability: 'Immediate',
-    education: 'High School',
-    languages: ['English', 'Hindi'],
-    address: '123 Worker St, Mumbai',
-    phone: '+91 98765 43210',
+  const { selectedArea, selectedSubArea } = useLocationStore();
+  
+  const [formData, setFormData] = useState({
+    skills: profile?.skills || ['Retail', 'Customer Service'],
+    experience: profile?.experience || '2 years',
+    preferredWorkType: profile?.preferredWorkType || 'full-time',
+    availability: profile?.availability || 'Immediate',
+    education: profile?.education || 'High School',
+    languages: profile?.languages || ['English', 'Hindi'],
+    address: profile?.address || '',
+    phone: profile?.phone || '',
+    area: selectedArea || '',
+    subArea: selectedSubArea || '',
   });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateWorkerProfile(formData);
-    setIsEditing(false);
-  };
 
   const handleChange = (name: string, value: any) => {
     setFormData(prev => ({
@@ -38,12 +38,28 @@ const WorkerProfileForm: React.FC<WorkerProfileFormProps> = ({ isEditing, setIsE
     }));
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateWorkerProfile(formData);
+    setIsEditing(false);
+  };
+
+  if (!user) return null;
+
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">
           <ProfileHeader user={user} />
           
+          <LocationSelector 
+            isEditing={isEditing}
+            onChange={(area, subArea) => {
+              handleChange('area', area);
+              handleChange('subArea', subArea);
+            }}
+          />
+
           <SkillsSection
             skills={formData.skills}
             isEditing={isEditing}

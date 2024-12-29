@@ -9,6 +9,11 @@ import WorkersPage from '../pages/workers/WorkersPage';
 import Dashboard from '../pages/dashboard/Dashboard';
 import ProfilePage from '../pages/profile/ProfilePage';
 import JobForm from '../pages/jobs/JobForm';
+import JobEditPage from '../pages/jobs/JobEditPage';
+import JobApplicationPage from '../pages/jobs/JobApplicationPage';
+import FAQ from '../pages/FAQ';
+import Contact from '../pages/Contact';
+import Privacy from '../pages/Privacy';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
 export const routes = (
@@ -18,6 +23,11 @@ export const routes = (
     <Route path="register" element={<Register />} />
     <Route path="jobs" element={<JobsPage />} />
     <Route path="workers" element={<WorkersPage />} />
+    <Route path="faq" element={<FAQ />} />
+    <Route path="contact" element={<Contact />} />
+    <Route path="privacy" element={<Privacy />} />
+    <Route path="jobs/:jobId/apply" element={<JobApplicationPage />} />
+    <Route path="jobs/:jobId/edit" element={<JobEditPage />} />
     <Route
       path="dashboard"
       element={

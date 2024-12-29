@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
-import { UserCircle, Menu, X } from 'lucide-react';
+import UserMenu from './navbar/UserMenu';
 
 const Navbar: React.FC = () => {
-  const { user, isAuthenticated, logout } = useAuthStore();
-  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-    setIsDropdownOpen(false);
-  };
-
-  const handleProfileClick = () => {
-    navigate('/profile');
-    setIsDropdownOpen(false);
-  };
 
   return (
     <nav className="bg-white shadow-lg">
@@ -41,38 +29,7 @@ const Navbar: React.FC = () => {
                 <Link to="/dashboard" className="text-gray-600 hover:text-gray-900">
                   Dashboard
                 </Link>
-                <div className="relative">
-                  <button 
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center space-x-1 focus:outline-none"
-                  >
-                    <UserCircle className="w-6 h-6" />
-                    <span>{user?.name}</span>
-                  </button>
-                  {isDropdownOpen && (
-                    <>
-                      {/* Invisible overlay to handle clicks outside dropdown */}
-                      <div 
-                        className="fixed inset-0 z-10"
-                        onClick={() => setIsDropdownOpen(false)}
-                      />
-                      <div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-xl z-20">
-                        <button
-                          onClick={handleProfileClick}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Profile
-                        </button>
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
+                <UserMenu />
               </>
             ) : (
               <>
@@ -103,8 +60,8 @@ const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="md:hidden border-t">
+          <div className="px-2 pt-2 pb-3 space-y-1">
             <Link
               to="/jobs"
               className="block px-3 py-2 text-gray-600 hover:text-gray-900"
@@ -128,22 +85,9 @@ const Navbar: React.FC = () => {
                 >
                   Dashboard
                 </Link>
-                <Link
-                  to="/profile"
-                  className="block px-3 py-2 text-gray-600 hover:text-gray-900"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900"
-                >
-                  Logout
-                </button>
+                <div className="px-3 py-2">
+                  <UserMenu />
+                </div>
               </>
             ) : (
               <>
